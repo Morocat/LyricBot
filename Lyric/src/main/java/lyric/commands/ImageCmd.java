@@ -10,9 +10,9 @@ import lyric.helpers.TextServer;
 import lyric.reddit.RedditApi;
 import lyric.utils.Pair;
 
-public class MemeCmd extends BotCommand {
+public class ImageCmd extends BotCommand {
 
-	public MemeCmd(String commandIdentifier, String description) {
+	public ImageCmd(String commandIdentifier, String description) {
 		super(commandIdentifier, description);
 	}
 
@@ -20,7 +20,7 @@ public class MemeCmd extends BotCommand {
 	public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
 		if (arguments == null || arguments.length == 0)
 			return;
-		Pair<String, String> urls = RedditApi.getInstance().getRandomImageFromSubreddit("memes");
+		Pair<String, String> urls = RedditApi.getInstance().getRandomImageFromSubreddit(arguments[0]);
 		if (urls == null) 
 			TextServer.sendString("Could not find an image to display", chat.getId(), absSender);
 		else
@@ -30,5 +30,5 @@ public class MemeCmd extends BotCommand {
 				TextServer.sendString("Error displaying image", chat.getId(), absSender);
 			}
 	}
-	
+
 }
