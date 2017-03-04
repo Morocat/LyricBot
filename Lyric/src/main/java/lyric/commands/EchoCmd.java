@@ -5,7 +5,7 @@ import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.bots.commands.BotCommand;
 
-import lyric.helpers.TextServer;
+import lyric.servers.TextServer;
 
 public class EchoCmd extends BotCommand {
 
@@ -20,7 +20,7 @@ public class EchoCmd extends BotCommand {
 		String s = "";
 		for (String a : arguments)
 			s += a + " ";
-		TextServer.sendString(s, chat.getId(), absSender);
+		TextServer.sendString(s, chat.getId());
 	}
 
 }

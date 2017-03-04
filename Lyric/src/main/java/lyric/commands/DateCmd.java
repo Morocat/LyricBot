@@ -7,7 +7,7 @@ import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.bots.commands.BotCommand;
 
-import lyric.helpers.TextServer;
+import lyric.servers.TextServer;
 
 public class DateCmd extends BotCommand {
 
@@ -17,7 +17,7 @@ public class DateCmd extends BotCommand {
 
 	@Override
 	public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
-		TextServer.sendString(new Date().toString(), chat.getId(), absSender);
+		TextServer.sendString(new Date().toString(), chat.getId());
 	}
 
 }

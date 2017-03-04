@@ -5,6 +5,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingCommandBot;
 
 import lyric.commands.*;
 import lyric.parsing.BaseCommandParser;
+import lyric.servers.TextServer;
 
 public class PollingLyric extends TelegramLongPollingCommandBot {
 	private final BaseCommandParser parser = new BaseCommandParser(this);
@@ -20,6 +21,7 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 	
 	public PollingLyric() {
 		//conversationStarter.start();
+		TextServer.initialize(this);
 		
 		register(memeCmd);
 		register(imageCmd);

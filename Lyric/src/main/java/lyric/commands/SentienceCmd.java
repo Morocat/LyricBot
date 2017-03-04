@@ -14,7 +14,7 @@ import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.bots.commands.BotCommand;
 
-import lyric.helpers.TextServer;
+import lyric.servers.TextServer;
 import rita.RiMarkov;
 
 public class SentienceCmd extends BotCommand {
@@ -68,10 +68,10 @@ public class SentienceCmd extends BotCommand {
 					m.loadText(chatHistory + historyDelta);
 				else
 					m.loadText(loadFile(FILENAME));
-				TextServer.sendString(m.generateSentence(), chat.getId(), absSender);
+				TextServer.sendString(m.generateSentence(), chat.getId());
 				} catch (Exception e) {
 					e.printStackTrace();
-					TextServer.sendString("Error generating sentence", chat.getId(), absSender);
+					TextServer.sendString("Error generating sentence", chat.getId());
 				}
 			}
 		}).start();

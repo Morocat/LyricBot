@@ -9,7 +9,7 @@ import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.bots.commands.BotCommand;
 
 import lyric.games.hangman.WordList;
-import lyric.helpers.TextServer;
+import lyric.servers.TextServer;
 
 public class Hangman extends BotCommand {
 	
@@ -30,22 +30,22 @@ public class Hangman extends BotCommand {
 	@Override
 	public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
 		if (state != STATE_GAME_OVER) {
-			TextServer.sendString("Hangman is already running", chat.getId(), absSender);
+			TextServer.sendString("Hangman is already running", chat.getId());
 			return;
 		}
 		state = STATE_PLAYING;
 		guessesRemaining = MAX_GUESSES;
 		guesses.clear();
 		wordToGuess = WordList.getRandomWord();
-		TextServer.sendString(formatUi(), chat.getId(), absSender);
+		TextServer.sendString(formatUi(), chat.getId());
 	}
 	
-	private void onGameEnd(boolean victory, long chatId, AbsSender bot) {
+	private void onGameEnd(boolean victory, long chatId) {
 		state = STATE_GAME_OVER;
 		if (victory) {
-			TextServer.sendString("You win!", chatId, bot);
+			TextServer.sendString("You win!", chatId);
 		} else
-			TextServer.sendString("You lose!", chatId, bot);
+			TextServer.sendString("You lose!", chatId);
 	}
 	
 	private boolean checkVictory() {
@@ -92,20 +92,20 @@ public class Hangman extends BotCommand {
 			params[0] = params[0].toLowerCase();
 			Character c = params[0].charAt(0);
 			if (!Character.isLetter(c)) {
-				TextServer.sendString("Invalid guess", chat.getId(), absSender);
+				TextServer.sendString("Invalid guess", chat.getId());
 				return;
 			}
 			if (guesses.contains(c)) {
-				TextServer.sendString("You already guessed that letter!", chat.getId(), absSender);
+				TextServer.sendString("You already guessed that letter!", chat.getId());
 			} else {
 				guesses.add(c);
 				if (!wordToGuess.contains(params[0]))
 					guessesRemaining--;
-				TextServer.sendString(formatUi(), chat.getId(), absSender);
+				TextServer.sendString(formatUi(), chat.getId());
 				if (checkVictory())
-					onGameEnd(true, chat.getId(), absSender);
+					onGameEnd(true, chat.getId());
 				else if (checkDefeat())
-					onGameEnd(false, chat.getId(), absSender);
+					onGameEnd(false, chat.getId());
 			}
 		}
 		

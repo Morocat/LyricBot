@@ -5,7 +5,7 @@ import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.bots.commands.BotCommand;
 
-import lyric.helpers.TextServer;
+import lyric.servers.TextServer;
 
 public class HelpCmd extends BotCommand {
 
@@ -25,11 +25,12 @@ public class HelpCmd extends BotCommand {
 		s += "/react - displays a random reaction gif\n";
 		s += "/image [subreddit] - displays a random image from [subreddit]\n";
 		s += "/gen - generates a random sentence\n";
+		s += "/poll - display the current poll\n";
 		s += "/poll start - start a new poll\n";
 		s += "/poll end - end the current poll\n";
-		s += "/poll resp [letter] - respond to the current poll\n";
+		s += "/poll rm [char] - remove a poll option while building a poll\n";
 		s += "/poll results - show the current poll results\n";
-		TextServer.sendString(s, chat.getId(), absSender);
+		TextServer.sendString(s, chat.getId());
 	}
 
 }
