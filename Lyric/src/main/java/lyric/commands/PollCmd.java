@@ -14,10 +14,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+<<<<<<< HEAD
 import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+=======
+
+import org.json.JSONArray;
+>>>>>>> 06ba76652b8ea572f8a19609cfc1a7d956147385
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.User;
@@ -36,6 +41,7 @@ public class PollCmd extends BotCommand {
 	
 	public PollCmd(String commandIdentifier, String description) {
 		super(commandIdentifier, description);
+<<<<<<< HEAD
 		loadPolls();
 	}
 	
@@ -49,10 +55,17 @@ public class PollCmd extends BotCommand {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+=======
+	}
+	
+	public void loadPolls() {
+		
+>>>>>>> 06ba76652b8ea572f8a19609cfc1a7d956147385
 	}
 	
 	public void savePolls() {
 		JSONArray arr = new JSONArray();
+<<<<<<< HEAD
 		for (Map.Entry<Long, Poll> en : polls.entrySet()) {
 			JSONObject o = new JSONObject();
 			o.put("key", en.getKey());
@@ -61,6 +74,13 @@ public class PollCmd extends BotCommand {
 		}
 		try {
 			writeFile(arr.toString());
+=======
+		
+		
+		o.put("polls", polls);
+		try {
+			writeFile(o.toString());
+>>>>>>> 06ba76652b8ea572f8a19609cfc1a7d956147385
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -152,7 +172,10 @@ public class PollCmd extends BotCommand {
 		}
 		p.publishPoll();
 		TextServer.sendString("Poll is now running!", chatId);
+<<<<<<< HEAD
 		savePolls();
+=======
+>>>>>>> 06ba76652b8ea572f8a19609cfc1a7d956147385
 	}
 	
 	private void endPoll(long chatId) {
@@ -209,8 +232,12 @@ public class PollCmd extends BotCommand {
     }
 
 	public void recordResponse(String msg, long chatId, User user) {
+<<<<<<< HEAD
 		if (polls.get(chatId).recordResponse(chatId, user, msg))
 			savePolls();
+=======
+		polls.get(chatId).recordResponse(chatId, user, msg);
+>>>>>>> 06ba76652b8ea572f8a19609cfc1a7d956147385
 	}
 	
 }

@@ -3,9 +3,13 @@ package lyric.poll;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+<<<<<<< HEAD
 import java.util.Map;
 
 import org.json.JSONArray;
+=======
+
+>>>>>>> 06ba76652b8ea572f8a19609cfc1a7d956147385
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.telegram.telegrambots.api.objects.User;
@@ -35,6 +39,7 @@ public class Poll {
 	public Poll(JSONObject o) {
 		state = o.getInt("state");
 		question = o.getString("question");
+<<<<<<< HEAD
 		JSONArray arr = o.getJSONArray("options");
 		for (int i = 0; i < arr.length(); i++)
 			options.add(arr.getString(i));
@@ -44,6 +49,10 @@ public class Poll {
 			JSONObject en = arr.getJSONObject(i);
 			responses.put(en.getInt("key"), en.getInt("value"));
 		}
+=======
+		options = (ArrayList<String>) o.get("options");
+		responses = (HashMap<Integer, Integer>) o.get("responses");
+>>>>>>> 06ba76652b8ea572f8a19609cfc1a7d956147385
 	}
 	
 	public JSONObject toJson() throws JSONException {
@@ -51,6 +60,7 @@ public class Poll {
 		o.put("state", state);
 		o.put("question", question);
 		o.put("options", options);
+<<<<<<< HEAD
 		JSONArray arr = new JSONArray();
 		for (Map.Entry<Integer, Integer> en : responses.entrySet()) {
 			JSONObject j = new JSONObject();
@@ -59,6 +69,9 @@ public class Poll {
 			arr.put(j);
 		}
 		o.put("responses", arr);
+=======
+		o.put("responses", responses);
+>>>>>>> 06ba76652b8ea572f8a19609cfc1a7d956147385
 		return o;
 	}
 	
@@ -83,11 +96,19 @@ public class Poll {
 		state = STATE_RUNNING;
 	}
 	
+<<<<<<< HEAD
 	public boolean recordResponse(long chatId, User user, String resp) {
 		int which = responseToInt(resp);
 		if (which >= options.size()) {
 			TextServer.sendString("Invalid option", chatId);
 			return false;
+=======
+	public void recordResponse(long chatId, User user, String resp) {
+		int which = responseToInt(resp);
+		if (which >= options.size()) {
+			TextServer.sendString("Invalid option", chatId);
+			return;
+>>>>>>> 06ba76652b8ea572f8a19609cfc1a7d956147385
 		}
 		if (responses.containsKey(user.getId())) {
 			if (which != responses.get(user.getId()))
@@ -97,7 +118,10 @@ public class Poll {
 		} else
 			TextServer.sendString(user.getFirstName() + " voted for " + options.get(which), chatId);
 		responses.put(user.getId(), which);
+<<<<<<< HEAD
 		return true;
+=======
+>>>>>>> 06ba76652b8ea572f8a19609cfc1a7d956147385
 	}
 	
 	public void endPoll(long chatId) {

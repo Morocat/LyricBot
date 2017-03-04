@@ -30,7 +30,11 @@ public class BaseCommandParser {
 		} else if (poll != null && poll.isOption(msg)) {
 			bot.pollCmd.recordResponse(msg, chatId, u.getMessage().getFrom());
 		} else { // at this point the msg is probably just a regular conversation, add to the Markov chain
+<<<<<<< HEAD
 			bot.sentCmd.recordString(msg, chatId);
+=======
+			bot.sentCmd.recordString(msg);
+>>>>>>> 06ba76652b8ea572f8a19609cfc1a7d956147385
 		}
 		
 	}
