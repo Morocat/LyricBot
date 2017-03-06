@@ -21,7 +21,7 @@ import rita.RiMarkov;
 
 public class SentienceCmd extends BotCommand {
 
-	private final static boolean SCALABLE_MODE = false;
+	private final static boolean SCALABLE_MODE = true;
 	private final static String FILENAME = "Chat History_";
 	private final int nFactor = 3; // 3 seems to work well, can change later if desired
 	private final Pattern p = Pattern.compile("\\[\\[(.*)\\]\\]"); // matches any line with text inside of [[ ]] such as [[Photo]]
@@ -44,7 +44,8 @@ public class SentienceCmd extends BotCommand {
 		public void run() {
 			while (!Thread.interrupted()) {
 				try {
-					Thread.sleep(3600000);
+					//Thread.sleep(3600000);
+					Thread.sleep(1800000); // every half hour
 					for (Map.Entry<Long, String> en : historyDelta.entrySet()) {
 						writeFile(en.getValue(), en.getKey(), true);
 						chatHistory.put(en.getKey(), chatHistory.get(en.getKey()) + en.getValue());
@@ -64,6 +65,8 @@ public class SentienceCmd extends BotCommand {
 			public void run() {
 				try {
 				RiMarkov m = new RiMarkov(nFactor);
+				if (chatHistory.get(chat.getId()) == null)
+					chatHistory.put(chat.getId(), loadFile(chat.getId()));
 				if (SCALABLE_MODE)
 					m.loadText(chatHistory.get(chat.getId()) + historyDelta);
 				else
@@ -89,15 +92,19 @@ public class SentienceCmd extends BotCommand {
 				if (m.matches()) // skip stickers, geolocations, etc
 					return;
 				n = nonAlpha.matcher(s);
-				if (!n.matches()) // skip messages without any alphabetical characters
+				// skip messages without any alphabetical characters
+				if (!n.lookingAt()) // use lookingAt() so that messages with a newline don't get discarded
 					return;
 				try {
 					if (chatHistory.get(chatId) == null)
 						chatHistory.put(chatId, loadFile(chatId));
-					if (SCALABLE_MODE)
-						historyDelta.put(chatId, historyDelta.get(chatId) + s);
-					else
-						writeFile(s, chatId, true);
+					if (SCALABLE_MODE) {
+						String str = s;
+						if (historyDelta.get(chatId) != null)
+							str = historyDelta.get(chatId) + s;
+						historyDelta.put(chatId, str + "\n");
+					} else
+						writeFile(s + "\n", chatId, true);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -106,7 +113,13 @@ public class SentienceCmd extends BotCommand {
 	}
 	
 	private synchronized String loadFile(long chatId) throws IOException {
-		FileReader fr = new FileReader(new File(FILENAME + chatId + ".txt"));
+		File f = new File(FILENAME + chatId + ".txt");
+		if (!f.exists()) { // create the file if it doesn't exist
+			BufferedWriter bw = new BufferedWriter(new FileWriter(f));
+			bw.write("");
+			bw.close();
+		}
+		FileReader fr = new FileReader(f);
 		BufferedReader br = new BufferedReader(fr);
 		String s = "", line;
 		while((line = br.readLine()) != null)

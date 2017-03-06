@@ -5,25 +5,31 @@ import org.telegram.telegrambots.bots.TelegramLongPollingCommandBot;
 
 import lyric.commands.*;
 import lyric.parsing.BaseCommandParser;
+import lyric.servers.ImageServer;
 import lyric.servers.TextServer;
 
 public class PollingLyric extends TelegramLongPollingCommandBot {
 	private final BaseCommandParser parser = new BaseCommandParser(this);
 	
 	public final MemeCmd memeCmd = new MemeCmd("meme", "Displays a random meme from r/memes");
+	public final ReactionCmd reactCmd = new ReactionCmd("react", "Displays a reaction gif");
 	public final ImageCmd imageCmd = new ImageCmd("image", "Displays a random meme from [subreddit]");
-	public final SentienceCmd sentCmd = new SentienceCmd("gen", "Generates a random sentence");
+	public final SentienceCmd sentCmd = new SentienceCmd("skynet", "Generates a random sentence");
 	public final Hangman hangman = new Hangman("hangman", "Starts a game of Hangman");
 	public final DateCmd dateCmd = new DateCmd("date", "Displays the current time & date");
 	public final EchoCmd echoCmd = new EchoCmd("echo", "Echos back the given string");
 	public final PollCmd pollCmd = new PollCmd("poll", "Starts a new poll");
 	public final HelpCmd helpCmd = new HelpCmd("help", "Displays the list of commands");
+	public final UserCmd userCmd = new UserCmd("user", "Displays user info");
+	public final ChatCmd chatCmd = new ChatCmd("chat", "Displays chat info");
 	
 	public PollingLyric() {
 		//conversationStarter.start();
 		TextServer.initialize(this);
+		ImageServer.initialize(this);
 		
 		register(memeCmd);
+		register(reactCmd);
 		register(imageCmd);
 		register(sentCmd);
 		register(hangman);
@@ -32,6 +38,8 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 		register(echoCmd);
 		register(pollCmd);
 		register(helpCmd);
+		register(userCmd);
+		register(chatCmd);
 		
 		System.out.println("Initialization done");
 	}
@@ -60,8 +68,8 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 
 	@Override
 	public String getBotToken() {
-		//return "351737494:AAE7ie6cqDgG-Jj28WwxXZvcmSFTqHlidyg"; // production
-		return "333708864:AAEIiYkM9hzFWNk2rd05JiaqdlBgGF27NhQ"; // development
+		return "351737494:AAE7ie6cqDgG-Jj28WwxXZvcmSFTqHlidyg"; // production
+		//return "333708864:AAEIiYkM9hzFWNk2rd05JiaqdlBgGF27NhQ"; // development
 	}
 
 	@Override

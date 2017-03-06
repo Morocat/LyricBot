@@ -22,7 +22,7 @@ public class BaseCommandParser {
 		if (u.getMessage().isCommand()) {
 			// do nothing
 		} else if (msg.toLowerCase().contains("http:") || msg.toLowerCase().contains("https:") || msg.toLowerCase().contains("www.")){ // web address, ignore for now
-			
+			// do nothing
 		} else if (poll != null && poll.state == Poll.STATE_BUILDING_QUESTION) {
 			bot.pollCmd.setPollQuestion(msg, chatId);
 		} else if (poll != null && poll.state == Poll.STATE_BUILDING_RESPONSES) {

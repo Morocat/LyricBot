@@ -24,6 +24,7 @@ public class ImageServer {
 			System.out.println("Sending long url: " + urls.first);
 			sendImg(urls.first, chatId);
 		} catch (Exception e) {
+			e.printStackTrace();
 			// if long url doesn't work try the short one
 			System.out.println("Sending short url: " + urls.second);
 			sendImg(urls.second, chatId);

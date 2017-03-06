@@ -18,8 +18,6 @@ import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import org.json.JSONArray;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.User;
@@ -28,12 +26,14 @@ import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.bots.commands.BotCommand;
 
+import lyric.admin.BotAdmin;
 import lyric.poll.Poll;
 import lyric.servers.TextServer;
 
 public class PollCmd extends BotCommand {
-	private final static String FILENAME = "Poll States.txt";
+	private final static String POLL_STATES = "Poll States.txt";
 	
+	// <ChatId, Poll>
 	private HashMap<Long, Poll> polls = new HashMap<>();
 	
 	public PollCmd(String commandIdentifier, String description) {
@@ -41,7 +41,7 @@ public class PollCmd extends BotCommand {
 		loadPolls();
 	}
 	
-	public void loadPolls() {
+	private void loadPolls() {
 		try {
 			JSONArray arr = new JSONArray(loadFile());
 			for (int i = 0; i < arr.length(); i++) {
@@ -53,7 +53,7 @@ public class PollCmd extends BotCommand {
 		}
 	}
 	
-	public void savePolls() {
+	private void savePolls() {
 		JSONArray arr = new JSONArray();
 		for (Map.Entry<Long, Poll> en : polls.entrySet()) {
 			JSONObject o = new JSONObject();
@@ -68,24 +68,27 @@ public class PollCmd extends BotCommand {
 		}
 	}
 	
-	private synchronized String loadFile() throws IOException {
-		FileReader fr = new FileReader(new File(FILENAME));
-		BufferedReader br = new BufferedReader(fr);
-		String s = "", line;
-		while((line = br.readLine()) != null)
-			s += line + "\n";
-		br.close();
-		return s;
-	}
-	
-	private synchronized void writeFile(String str) throws IOException {
-		BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME));
-		bw.write(str);
-		bw.close();
+	private final static List<String> adminCmds = new ArrayList<>();
+	static {
+		adminCmds.add("start");
+		adminCmds.add("done");
+		adminCmds.add("end");
+		adminCmds.add("rm");
+		adminCmds.add("admin");
 	}
 	
 	@Override
 	public void execute(AbsSender bot, User user, Chat chat, String[] arguments) {
+		//System.out.println("User " + user.getId() + (BotAdmin.getInstance().isUserAdmin(bot, chat.getId(), user.getId()) ? " is" : " isn't") + " an admin");
+		
+		// verify user is a poll admin to run admin cmds
+		if (!chat.isUserChat())
+			if (arguments != null && arguments.length > 0 && adminCmds.contains(arguments[0]))
+				if (!BotAdmin.getInstance().isUserAdmin(bot, chat.getId(), user.getId())) {
+					TextServer.sendString("Only poll admins may use that command", chat.getId());
+					return;
+				}
+
 		if (arguments == null || arguments.length == 0) {
 			displayPoll(chat.getId(), user.getUserName());
 		} else if (arguments[0].equals("start")) {
@@ -101,7 +104,14 @@ public class PollCmd extends BotCommand {
 				removePollOption(arguments[1], chat.getId());
 		} else if (arguments[0].equals("results")) {
 			displayResults(chat.getId(), user.getId());
+		} else if (arguments[0].equals("admin")) {
+			BotAdmin.getInstance().addAdmin(arguments[1], chat.getId());
 		}
+	}
+
+	public void recordResponse(String msg, long chatId, User user) {
+		if (polls.get(chatId).recordResponse(chatId, user, msg))
+			savePolls();
 	}
 
 	private void createPoll(long chatId) {
@@ -148,6 +158,11 @@ public class PollCmd extends BotCommand {
 	
 	private void startPoll(long chatId) {
 		Poll p = polls.get(chatId);
+		if (p != null && p.state == STATE_BUILDING_QUESTION) {
+			polls.remove(chatId);
+			TextServer.sendString("Cancelled poll", chatId);
+			return;
+		}
 		if (p == null || p.state != STATE_BUILDING_RESPONSES) {
 			TextServer.sendString("You must be building a poll to use this command", chatId);
 			return;
@@ -209,10 +224,21 @@ public class PollCmd extends BotCommand {
         message.setReplyMarkup(keyboardMarkup);
         TextServer.sendMessage(message, chatId);
     }
-
-	public void recordResponse(String msg, long chatId, User user) {
-		if (polls.get(chatId).recordResponse(chatId, user, msg))
-			savePolls();
+	
+	private synchronized String loadFile() throws IOException {
+		FileReader fr = new FileReader(new File(POLL_STATES));
+		BufferedReader br = new BufferedReader(fr);
+		String s = "", line;
+		while((line = br.readLine()) != null)
+			s += line + "\n";
+		br.close();
+		return s;
+	}
+	
+	private synchronized void writeFile(String str) throws IOException {
+		BufferedWriter bw = new BufferedWriter(new FileWriter(POLL_STATES));
+		bw.write(str);
+		bw.close();
 	}
 	
 }

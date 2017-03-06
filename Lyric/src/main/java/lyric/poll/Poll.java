@@ -22,6 +22,8 @@ public class Poll {
 	public int state;
 	public ArrayList<String> options = new ArrayList<>();
 	public String question;
+	
+	// <UserId, choice>
 	public HashMap<Integer, Integer> responses = new HashMap<>();
 	private final static DecimalFormat percentFormatter = new DecimalFormat();
 	static {
