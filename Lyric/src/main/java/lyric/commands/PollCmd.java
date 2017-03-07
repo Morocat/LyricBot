@@ -73,14 +73,13 @@ public class PollCmd extends BotCommand {
 		adminCmds.add("start");
 		adminCmds.add("done");
 		adminCmds.add("end");
+		adminCmds.add("add");
 		adminCmds.add("rm");
-		adminCmds.add("admin");
+		adminCmds.add("q");
 	}
 	
 	@Override
 	public void execute(AbsSender bot, User user, Chat chat, String[] arguments) {
-		//System.out.println("User " + user.getId() + (BotAdmin.getInstance().isUserAdmin(bot, chat.getId(), user.getId()) ? " is" : " isn't") + " an admin");
-		
 		// verify user is a poll admin to run admin cmds
 		if (!chat.isUserChat())
 			if (arguments != null && arguments.length > 0 && adminCmds.contains(arguments[0]))
@@ -92,11 +91,31 @@ public class PollCmd extends BotCommand {
 		if (arguments == null || arguments.length == 0) {
 			displayPoll(chat.getId(), user.getUserName());
 		} else if (arguments[0].equals("start")) {
-			createPoll(chat.getId());
+			createPoll(chat.getId(), user.getId());
 		} else if (arguments[0].equals("done")) {
 			startPoll(chat.getId());
 		} else if (arguments[0].equals("end")) {
 			endPoll(chat.getId());
+		} else if (arguments[0].equals("q")) {
+			if (arguments.length < 2)
+				TextServer.sendString("Missing parameter", chat.getId());
+			else {
+				String s = "";
+				for (int i = 1; i < arguments.length; i++)
+					s += arguments[i] + " ";
+				s = s.substring(0, s.length() - 1);
+				setPollQuestion(s, chat.getId(), user.getId());
+			}
+		} else if (arguments[0].equals("add")) {
+			if (arguments.length < 2)
+				TextServer.sendString("Missing parameter", chat.getId());
+			else {
+				String s = "";
+				for (int i = 1; i < arguments.length; i++)
+					s += arguments[i] + " ";
+				s = s.substring(0, s.length() - 1);
+				addPollOption(s, chat.getId(), user.getId());
+			}
 		} else if (arguments[0].equals("rm")) {
 			if (arguments.length < 2)
 				TextServer.sendString("Missing parameter", chat.getId());
@@ -104,8 +123,6 @@ public class PollCmd extends BotCommand {
 				removePollOption(arguments[1], chat.getId());
 		} else if (arguments[0].equals("results")) {
 			displayResults(chat.getId(), user.getId());
-		} else if (arguments[0].equals("admin")) {
-			BotAdmin.getInstance().addAdmin(arguments[1], chat.getId());
 		}
 	}
 
@@ -114,30 +131,38 @@ public class PollCmd extends BotCommand {
 			savePolls();
 	}
 
-	private void createPoll(long chatId) {
+	private void createPoll(long chatId, int userId) {
 		Poll poll = polls.get(chatId);
 		if (poll != null && poll.state != STATE_INACTIVE) {
 			TextServer.sendString("A poll is already either being built or currently running", chatId);
 			return;
 		}
-		polls.put(chatId, new Poll());
+		polls.put(chatId, new Poll(userId));
 		TextServer.sendString("Let's create a new poll. First send me the question.", chatId);
 	}
 	
-	public void setPollQuestion(String msg, long chatId) {
+	public void setPollQuestion(String msg, long chatId, int userId) {
 		Poll poll = polls.get(chatId);
 		if (poll != null && poll.state != STATE_BUILDING_QUESTION) {
 			TextServer.sendString("You must be building a poll to use this command", chatId);
+			return;
+		}
+		if (poll.creator != userId) {
+			TextServer.sendString("Only the creator of the poll may add options", chatId);
 			return;
 		}
 		poll.setQuestion(msg);
 		TextServer.sendString("Creating a new poll: '" + msg + "'" + "\nNow send me the first response option.", chatId);
 	}
 	
-	public void addPollOption(String opt, long chatId) {
+	public void addPollOption(String opt, long chatId, int userId) {
 		Poll p = polls.get(chatId);
 		if (p == null || p.state != STATE_BUILDING_RESPONSES) {
 			TextServer.sendString("You must be building a poll to use this command", chatId);
+			return;
+		}
+		if (p.creator != userId) {
+			TextServer.sendString("Only the creator of the poll may add options", chatId);
 			return;
 		}
 		p.addOption(opt);

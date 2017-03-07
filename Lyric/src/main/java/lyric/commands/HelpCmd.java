@@ -16,7 +16,7 @@ public class HelpCmd extends BotCommand {
 
 	@Override
 	public void execute(AbsSender bot, User user, Chat chat, String[] arguments) {
-		String s = "What's this owo?\n";
+		String s = "What's this? owo\n";
 		s += "/help - shows this help message\n";
 		s += "/echo [string] - echos back the string\n";
 		s += "/date - displays the current date and time\n";
@@ -31,10 +31,12 @@ public class HelpCmd extends BotCommand {
 		s += "/poll - display the current poll\n";
 		s += "/poll results - show the current poll results\n";
 		if (BotAdmin.getInstance().isUserAdmin(bot, chat.getId(), user.getId())) {
+			s += "/admin [userId] - adds [userId] to the list of bot admins for this chat\n";
 			s += "/poll start - start a new poll\n";
 			s += "/poll end - end the current poll\n";
+			s += "/poll q [question] - set the poll's question\n";
+			s += "/poll add - add an option to the poll\n";
 			s += "/poll rm [char] - remove a poll option while building a poll\n";
-			s += "/poll admin [username] - adds [username] to the list of users that can manage polls\n";
 			TextServer.sendString(s, user.getId());
 		} else
 			TextServer.sendString(s, chat.getId());

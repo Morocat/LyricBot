@@ -3,7 +3,18 @@ package lyric;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingCommandBot;
 
-import lyric.commands.*;
+import lyric.commands.AdminCmd;
+import lyric.commands.ChatCmd;
+import lyric.commands.DateCmd;
+import lyric.commands.EchoCmd;
+import lyric.commands.Hangman;
+import lyric.commands.HelpCmd;
+import lyric.commands.ImageCmd;
+import lyric.commands.MemeCmd;
+import lyric.commands.PollCmd;
+import lyric.commands.ReactionCmd;
+import lyric.commands.SentienceCmd;
+import lyric.commands.UserCmd;
 import lyric.parsing.BaseCommandParser;
 import lyric.servers.ImageServer;
 import lyric.servers.TextServer;
@@ -22,6 +33,7 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 	public final HelpCmd helpCmd = new HelpCmd("help", "Displays the list of commands");
 	public final UserCmd userCmd = new UserCmd("user", "Displays user info");
 	public final ChatCmd chatCmd = new ChatCmd("chat", "Displays chat info");
+	public final AdminCmd adminCmd = new AdminCmd("admin", "Add a user as a bot admin for this chat");
 	
 	public PollingLyric() {
 		//conversationStarter.start();
@@ -40,6 +52,7 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 		register(helpCmd);
 		register(userCmd);
 		register(chatCmd);
+		register(adminCmd);
 		
 		System.out.println("Initialization done");
 	}

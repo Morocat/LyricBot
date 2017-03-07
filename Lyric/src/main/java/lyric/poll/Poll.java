@@ -19,7 +19,7 @@ public class Poll {
 	STATE_BUILDING_QUESTION = 2,
 	STATE_BUILDING_RESPONSES = 3;
 	
-	public int state;
+	public int state, creator;
 	public ArrayList<String> options = new ArrayList<>();
 	public String question;
 	
@@ -30,21 +30,27 @@ public class Poll {
 		percentFormatter.setMaximumFractionDigits(0);
 	}
 	
-	public Poll() {
+	public Poll(int userId) {
 		state = STATE_BUILDING_QUESTION;
+		creator = userId;
 	}
 	
 	public Poll(JSONObject o) {
 		state = o.getInt("state");
 		question = o.getString("question");
+		creator = o.getInt("creator");
 		JSONArray arr = o.getJSONArray("options");
 		for (int i = 0; i < arr.length(); i++)
 			options.add(arr.getString(i));
 		
-		arr = o.getJSONArray("responses");
-		for (int i = 0; i < arr.length(); i++) {
-			JSONObject en = arr.getJSONObject(i);
-			responses.put(en.getInt("key"), en.getInt("value"));
+		try {
+			arr = o.getJSONArray("responses");
+			for (int i = 0; i < arr.length(); i++) {
+				JSONObject en = arr.getJSONObject(i);
+				responses.put(en.getInt("key"), en.getInt("value"));
+			}
+		} catch (JSONException e) {
+			System.out.println("No responses recorded");
 		}
 	}
 	
@@ -53,6 +59,7 @@ public class Poll {
 		o.put("state", state);
 		o.put("question", question);
 		o.put("options", options);
+		o.put("creator", creator);
 		JSONArray arr = new JSONArray();
 		for (Map.Entry<Integer, Integer> en : responses.entrySet()) {
 			JSONObject j = new JSONObject();

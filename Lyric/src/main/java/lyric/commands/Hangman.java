@@ -44,8 +44,12 @@ public class Hangman extends BotCommand {
 		state = STATE_GAME_OVER;
 		if (victory) {
 			TextServer.sendString("You win!", chatId);
-		} else
-			TextServer.sendString("You lose!", chatId);
+		} else {
+			String w = "You lose!\n\nThe word was: ";
+			for (int i = 0; i < wordToGuess.length(); i++)
+				w += wordToGuess.charAt(i) + " ";
+			TextServer.sendString(w, chatId);
+		}
 	}
 	
 	private boolean checkVictory() {
@@ -87,9 +91,20 @@ public class Hangman extends BotCommand {
 
 		@Override
 		public void execute(AbsSender absSender, User user, Chat chat, String[] params) {
-			if (state != STATE_PLAYING || params == null || params.length == 0 || params[0].length() > 1)
+			if (state != STATE_PLAYING || params == null || params.length == 0)
 				return;
 			params[0] = params[0].toLowerCase();
+			if (params[0].length() > 1) { // guess the whole word
+				if (params[0].equals(wordToGuess))
+					onGameEnd(true, chat.getId());
+				else {
+					guessesRemaining--;
+					TextServer.sendString(formatUi(), chat.getId());
+					if (checkDefeat())
+						onGameEnd(false, chat.getId());
+				}
+				return;
+			}
 			Character c = params[0].charAt(0);
 			if (!Character.isLetter(c)) {
 				TextServer.sendString("Invalid guess", chat.getId());
