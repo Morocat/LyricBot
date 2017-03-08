@@ -84,7 +84,7 @@ public class PollCmd extends BotCommand {
 		if (!chat.isUserChat())
 			if (arguments != null && arguments.length > 0 && adminCmds.contains(arguments[0]))
 				if (!BotAdmin.getInstance().isUserAdmin(bot, chat.getId(), user.getId())) {
-					TextServer.sendString("Only poll admins may use that command", chat.getId());
+					TextServer.sendString("Only bot admins may use that command", chat.getId());
 					return;
 				}
 
@@ -138,7 +138,7 @@ public class PollCmd extends BotCommand {
 			return;
 		}
 		polls.put(chatId, new Poll(userId));
-		TextServer.sendString("Let's create a new poll. First send me the question.", chatId);
+		TextServer.sendString("Let's create a new poll. First send me the question via /poll q [question].", chatId);
 	}
 	
 	public void setPollQuestion(String msg, long chatId, int userId) {
@@ -148,11 +148,11 @@ public class PollCmd extends BotCommand {
 			return;
 		}
 		if (poll.creator != userId) {
-			TextServer.sendString("Only the creator of the poll may add options", chatId);
+			//TextServer.sendString("Only the creator of the poll may add options", chatId);
 			return;
 		}
 		poll.setQuestion(msg);
-		TextServer.sendString("Creating a new poll: '" + msg + "'" + "\nNow send me the first response option.", chatId);
+		TextServer.sendString("Creating a new poll: '" + msg + "'" + "\nNow send me a response option via /poll add [response].", chatId);
 	}
 	
 	public void addPollOption(String opt, long chatId, int userId) {
@@ -162,7 +162,7 @@ public class PollCmd extends BotCommand {
 			return;
 		}
 		if (p.creator != userId) {
-			TextServer.sendString("Only the creator of the poll may add options", chatId);
+			//TextServer.sendString("Only the creator of the poll may add options", chatId);
 			return;
 		}
 		p.addOption(opt);

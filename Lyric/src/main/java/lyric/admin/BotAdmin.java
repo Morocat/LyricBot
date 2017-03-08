@@ -31,7 +31,7 @@ public class BotAdmin {
 	private final static String FILENAME = "Bot Admins.txt";
 	
 	// <ChatId, UserIds>
-	private HashMap<Long, List<Integer>> pollAdmins = new HashMap<>();
+	private HashMap<Long, List<Integer>> admins = new HashMap<>();
 	
 	public void loadAdmins() {
 		try {
@@ -44,7 +44,7 @@ public class BotAdmin {
 				List<Integer> list = new ArrayList<>();
 				for (int j = 0; j < val.length(); j++)
 					list.add(val.getInt(j));
-				pollAdmins.put(o.getLong("key"), list);
+				admins.put(o.getLong("key"), list);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -69,7 +69,7 @@ public class BotAdmin {
 	
 	public void saveAdmins() throws IOException {
 		JSONArray arr = new JSONArray();
-		for (Map.Entry<Long, List<Integer>> en : pollAdmins.entrySet()) {
+		for (Map.Entry<Long, List<Integer>> en : admins.entrySet()) {
 			JSONObject o = new JSONObject();
 			o.put("key", en.getKey());
 			o.put("value", en.getValue());
@@ -83,12 +83,12 @@ public class BotAdmin {
 	public boolean isUserAdmin(AbsSender bot, long chatId, int userId) {
 		if (userId == 114800779) // that's me! @Morororo
 			return true;
-		List<Integer> admins = getChatAdmins(chatId, bot);
-		if (admins == null)
-			admins = new ArrayList<>();
-		if (pollAdmins.get(chatId) != null)
-			admins.addAll(pollAdmins.get(chatId));
-		return admins.contains(userId);
+		List<Integer> adminList = getChatAdmins(chatId, bot);
+		if (adminList == null)
+			adminList = new ArrayList<>();
+		if (admins.get(chatId) != null)
+			adminList.addAll(admins.get(chatId));
+		return adminList.contains(userId);
 	}
 	
 	private List<Integer> getChatAdmins(long chatId, AbsSender bot) {
@@ -106,9 +106,9 @@ public class BotAdmin {
 	}
 	
 	public void addAdmin(String userId, long chatId) {
-		if (pollAdmins.get(chatId) == null)
-			pollAdmins.put(chatId, new ArrayList<Integer>());
-		pollAdmins.get(chatId).add(Integer.parseInt(userId));
+		if (admins.get(chatId) == null)
+			admins.put(chatId, new ArrayList<Integer>());
+		admins.get(chatId).add(Integer.parseInt(userId));
 		try {
 			saveAdmins();
 		} catch (IOException e) {

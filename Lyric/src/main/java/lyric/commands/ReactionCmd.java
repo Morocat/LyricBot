@@ -18,7 +18,7 @@ public class ReactionCmd extends BotCommand {
 
 	@Override
 	public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
-		Pair<String, String> urls = RedditApi.getInstance().getRandomImageFromSubreddit("reactiongifs", "gif");
+		Pair<String, String> urls = RedditApi.getInstance().getRandomImageFromSubreddit("reactiongifs", chat.getId(), "gif");
 		if (urls == null) 
 			TextServer.sendString("Could not find an image to display", chat.getId());
 		else

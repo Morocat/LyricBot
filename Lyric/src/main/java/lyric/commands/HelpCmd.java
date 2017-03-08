@@ -30,8 +30,10 @@ public class HelpCmd extends BotCommand {
 		s += "/skynet - generates a random sentence\n";
 		s += "/poll - display the current poll\n";
 		s += "/poll results - show the current poll results\n";
+		s += "/roll [i]d[j] - rolls [i] amount of [j]-sided dice\n";
 		if (BotAdmin.getInstance().isUserAdmin(bot, chat.getId(), user.getId())) {
 			s += "/admin [userId] - adds [userId] to the list of bot admins for this chat\n";
+			s += "/nsfw [on/off] - Enables/Disables nsfw features\n";
 			s += "/poll start - start a new poll\n";
 			s += "/poll end - end the current poll\n";
 			s += "/poll q [question] - set the poll's question\n";
@@ -45,7 +47,8 @@ public class HelpCmd extends BotCommand {
 	/**
 	 * This string for updating command list with botfather using /setcommands
 	 * 
-	 * help - Display the list of commands
+	 * 
+help - Display the list of commands
 echo - Echos back a string
 date - Display the current time and date
 user - Displays user info
@@ -57,6 +60,7 @@ react - Display a reaction gif
 image - Display an image from [subreddit]
 skynet - Generate a random sentence
 poll - Displays the current poll
+roll - Roll the dice
 	 */
 
 }

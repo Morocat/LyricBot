@@ -6,11 +6,13 @@ import org.telegram.telegrambots.bots.TelegramLongPollingCommandBot;
 import lyric.commands.AdminCmd;
 import lyric.commands.ChatCmd;
 import lyric.commands.DateCmd;
+import lyric.commands.DiceCmd;
 import lyric.commands.EchoCmd;
 import lyric.commands.Hangman;
 import lyric.commands.HelpCmd;
 import lyric.commands.ImageCmd;
 import lyric.commands.MemeCmd;
+import lyric.commands.NsfwCmd;
 import lyric.commands.PollCmd;
 import lyric.commands.ReactionCmd;
 import lyric.commands.SentienceCmd;
@@ -34,6 +36,8 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 	public final UserCmd userCmd = new UserCmd("user", "Displays user info");
 	public final ChatCmd chatCmd = new ChatCmd("chat", "Displays chat info");
 	public final AdminCmd adminCmd = new AdminCmd("admin", "Add a user as a bot admin for this chat");
+	public final NsfwCmd nsfwCmd = new NsfwCmd("nsfw", "Sets whether this chat can use NSFW features");
+	public final DiceCmd diceCmd = new DiceCmd("roll", "Rolls dice");
 	
 	public PollingLyric() {
 		//conversationStarter.start();
@@ -53,6 +57,8 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 		register(userCmd);
 		register(chatCmd);
 		register(adminCmd);
+		register(nsfwCmd);
+		register(diceCmd);
 		
 		System.out.println("Initialization done");
 	}
@@ -81,8 +87,8 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 
 	@Override
 	public String getBotToken() {
-		return "351737494:AAE7ie6cqDgG-Jj28WwxXZvcmSFTqHlidyg"; // production
-		//return "333708864:AAEIiYkM9hzFWNk2rd05JiaqdlBgGF27NhQ"; // development
+		//return "351737494:AAE7ie6cqDgG-Jj28WwxXZvcmSFTqHlidyg"; // production
+		return "333708864:AAEIiYkM9hzFWNk2rd05JiaqdlBgGF27NhQ"; // development
 	}
 
 	@Override

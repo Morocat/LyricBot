@@ -1,5 +1,6 @@
 package lyric.reddit;
 
+import lyric.admin.Nsfw;
 import lyric.utils.Pair;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.UserAgent;
@@ -27,22 +28,32 @@ public class RedditApi {
 	
 	private final RedditClient client;
 	
-	public Pair<String, String> getRandomImageFromSubreddit(String subreddit) {
-		return getRandomImageFromSubreddit(subreddit, new String[0]);
+	public Pair<String, String> getRandomImageFromSubreddit(String subreddit, long chatId) {
+		return getRandomImageFromSubreddit(subreddit, chatId, new String[0]);
 	}
 	
-	public Pair<String, String> getRandomImageFromSubreddit(String subreddit, String... imageType) {
+	public Pair<String, String> getRandomImageFromSubreddit(String subreddit, long chatId, String... imageType) {
 		try {
-		if (client.getSubreddit(subreddit).getAllowedSubmissionType() == SubmissionType.SELF)
-			return null;
+			if (client.getSubreddit(subreddit).getAllowedSubmissionType() == SubmissionType.SELF) {
+				System.out.println("Allowed submission types is self only");
+				return null;
+			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
+		if (client.getSubreddit(subreddit).isNsfw() && !Nsfw.getInstance().isChatAllowNsfw(chatId)) {
+			System.out.println("NSFW mode is off");
+			return null;
+		}
+		
 		Submission s = null;
 		for (int i = 0; i < 10; i++) {
 			try {
 				s = client.getRandomSubmission(subreddit);
 				if (s.isSelfPost())
+					continue;
+				if (s.isNsfw() && !Nsfw.getInstance().isChatAllowNsfw(chatId))
 					continue;
 				if (imageType.length == 0) {
 					break;

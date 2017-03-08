@@ -20,7 +20,7 @@ public class ImageCmd extends BotCommand {
 	public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
 		if (arguments == null || arguments.length == 0)
 			return;
-		Pair<String, String> urls = RedditApi.getInstance().getRandomImageFromSubreddit(arguments[0]);
+		Pair<String, String> urls = RedditApi.getInstance().getRandomImageFromSubreddit(arguments[0], chat.getId());
 		if (urls == null) 
 			TextServer.sendString("Could not find an image to display", chat.getId());
 		else

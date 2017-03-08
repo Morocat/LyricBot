@@ -64,14 +64,14 @@ public class SentienceCmd extends BotCommand {
 			@Override
 			public void run() {
 				try {
-				RiMarkov m = new RiMarkov(nFactor);
-				if (chatHistory.get(chat.getId()) == null)
-					chatHistory.put(chat.getId(), loadFile(chat.getId()));
-				if (SCALABLE_MODE)
-					m.loadText(chatHistory.get(chat.getId()) + historyDelta);
-				else
-					m.loadText(loadFile(chat.getId()));
-				TextServer.sendString(m.generateSentence(), chat.getId());
+					RiMarkov m = new RiMarkov(nFactor);
+					if (chatHistory.get(chat.getId()) == null)
+						chatHistory.put(chat.getId(), loadFile(chat.getId()));
+					if (SCALABLE_MODE)
+						m.loadText(chatHistory.get(chat.getId()) + historyDelta.get(chat.getId()));
+					else
+						m.loadText(loadFile(chat.getId()));
+					TextServer.sendString(m.generateSentence(), chat.getId());
 				} catch (Exception e) {
 					e.printStackTrace();
 					TextServer.sendString("Error generating sentence", chat.getId());
@@ -80,7 +80,7 @@ public class SentienceCmd extends BotCommand {
 		}).start();
 	}
 	
-	public void recordString(String s, long chatId) {
+	public void recordString(String s, long chatId, boolean userChat) {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -98,7 +98,7 @@ public class SentienceCmd extends BotCommand {
 				try {
 					if (chatHistory.get(chatId) == null)
 						chatHistory.put(chatId, loadFile(chatId));
-					if (SCALABLE_MODE) {
+					if (SCALABLE_MODE && !userChat) {
 						String str = s;
 						if (historyDelta.get(chatId) != null)
 							str = historyDelta.get(chatId) + s;

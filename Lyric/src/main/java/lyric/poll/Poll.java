@@ -68,7 +68,7 @@ public class Poll {
 			arr.put(j);
 		}
 		o.put("responses", arr);
-		o.put("responses", responses);
+		//o.put("responses", responses);
 		return o;
 	}
 	
@@ -130,8 +130,9 @@ public class Poll {
 		String s = question + "\n\n";
 		int totalVotes = responses.size();
 		for (int i = 0; i < options.size(); i++) {
-			s += options.get(i) + " - " + getVotesForOption(i) + "\n"; 
-			for (int j = 0; j < getVotesForOption(i) / totalVotes * 10; j++)
+			s += options.get(i) + " - " + getVotesForOption(i) + "\n";
+			int gfxCount = (int)(((double)getVotesForOption(i)) / ((double) totalVotes) * 10.0);
+			for (int j = 0; j < gfxCount; j++)
 				s += "\uD83D\uDC4D"; // thumbs up emoji
 			s += percentFormatter.format(((double)getVotesForOption(i)) / ((double) totalVotes) * 100.0) + "%\n\n";
 		}

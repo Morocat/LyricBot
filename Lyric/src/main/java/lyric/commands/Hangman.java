@@ -47,7 +47,7 @@ public class Hangman extends BotCommand {
 		} else {
 			String w = "You lose!\n\nThe word was: ";
 			for (int i = 0; i < wordToGuess.length(); i++)
-				w += wordToGuess.charAt(i) + " ";
+				w += wordToGuess.charAt(i);
 			TextServer.sendString(w, chatId);
 		}
 	}
