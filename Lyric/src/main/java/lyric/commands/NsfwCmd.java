@@ -17,6 +17,10 @@ public class NsfwCmd extends BotCommand {
 
 	@Override
 	public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
+		if (arguments == null || arguments.length == 0) {
+			TextServer.sendString("NSFW mode is " + (Nsfw.getInstance().isChatAllowNsfw(chat.getId()) ? "on" : "off"), chat.getId());
+			return;
+		}
 		if (!BotAdmin.getInstance().isUserAdmin(absSender, chat.getId(), user.getId())) {
 			TextServer.sendString("Only bot admins may use that command", chat.getId());
 			return;

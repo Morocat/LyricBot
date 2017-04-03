@@ -87,8 +87,8 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 
 	@Override
 	public String getBotToken() {
-		//return "351737494:AAE7ie6cqDgG-Jj28WwxXZvcmSFTqHlidyg"; // production
-		return "333708864:AAEIiYkM9hzFWNk2rd05JiaqdlBgGF27NhQ"; // development
+		return "351737494:AAE7ie6cqDgG-Jj28WwxXZvcmSFTqHlidyg"; // production
+		//return "333708864:AAEIiYkM9hzFWNk2rd05JiaqdlBgGF27NhQ"; // development
 	}
 
 	@Override

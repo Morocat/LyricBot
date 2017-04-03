@@ -1,5 +1,7 @@
 package lyric.reddit;
 
+import java.util.Date;
+
 import lyric.admin.Nsfw;
 import lyric.utils.Pair;
 import net.dean.jraw.RedditClient;
@@ -11,13 +13,16 @@ import net.dean.jraw.models.Subreddit.SubmissionType;
 
 public class RedditApi {
 	private final static RedditApi instance = new RedditApi();
+	
+	
 	private RedditApi() {
 		UserAgent agent = UserAgent.of("desktop", "LyricBot", "v0.1", "time_cat");
 		client = new RedditClient(agent);
-		Credentials creds = Credentials.script("time_cat", "rocketman", "0aLW0wi7S-Fz9Q", "-XyLm1yLuzuWUHGuxMQyp5OYtOc");
+		creds = Credentials.script("time_cat", "rocketman", "0aLW0wi7S-Fz9Q", "-XyLm1yLuzuWUHGuxMQyp5OYtOc");
 		try {
 			OAuthData authData = client.getOAuthHelper().easyAuth(creds);
 			client.authenticate(authData);
+			expireTime = authData.getExpirationDate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -26,6 +31,8 @@ public class RedditApi {
 		return instance;
 	}
 	
+	private Date expireTime;
+	private final Credentials creds;
 	private final RedditClient client;
 	
 	public Pair<String, String> getRandomImageFromSubreddit(String subreddit, long chatId) {
@@ -33,6 +40,16 @@ public class RedditApi {
 	}
 	
 	public Pair<String, String> getRandomImageFromSubreddit(String subreddit, long chatId, String... imageType) {
+		if (new Date().getTime() - expireTime.getTime() > 3600000L) {
+			try {
+				OAuthData authData = client.getOAuthHelper().easyAuth(creds);
+				client.authenticate(authData);
+				expireTime = authData.getExpirationDate();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
 		try {
 			if (client.getSubreddit(subreddit).getAllowedSubmissionType() == SubmissionType.SELF) {
 				System.out.println("Allowed submission types is self only");

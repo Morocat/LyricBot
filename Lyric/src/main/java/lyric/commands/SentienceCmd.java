@@ -51,6 +51,7 @@ public class SentienceCmd extends BotCommand {
 						chatHistory.put(en.getKey(), chatHistory.get(en.getKey()) + en.getValue());
 						historyDelta.put(en.getKey(), "");
 					}
+					System.out.println("Wrote chat history deltas");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
