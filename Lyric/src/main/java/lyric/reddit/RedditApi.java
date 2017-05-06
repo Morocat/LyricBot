@@ -5,6 +5,7 @@ import java.util.Date;
 import lyric.admin.Nsfw;
 import lyric.utils.Pair;
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.UserAgent;
 import net.dean.jraw.http.oauth.Credentials;
 import net.dean.jraw.http.oauth.OAuthData;
@@ -35,11 +36,11 @@ public class RedditApi {
 	private final Credentials creds;
 	private final RedditClient client;
 	
-	public Pair<String, String> getRandomImageFromSubreddit(String subreddit, long chatId) {
+	public Pair<String, String> getRandomImageFromSubreddit(String subreddit, long chatId) throws RedditException {
 		return getRandomImageFromSubreddit(subreddit, chatId, new String[0]);
 	}
 	
-	public Pair<String, String> getRandomImageFromSubreddit(String subreddit, long chatId, String... imageType) {
+	public Pair<String, String> getRandomImageFromSubreddit(String subreddit, long chatId, String... imageType) throws RedditException {
 		if (new Date().getTime() - expireTime.getTime() > 3600000L) {
 			try {
 				OAuthData authData = client.getOAuthHelper().easyAuth(creds);
@@ -47,21 +48,21 @@ public class RedditApi {
 				expireTime = authData.getExpirationDate();
 			} catch (Exception e) {
 				e.printStackTrace();
-				return null;
+				throw new RedditException("Error authenticating");
 			}
 		}
 		try {
 			if (client.getSubreddit(subreddit).getAllowedSubmissionType() == SubmissionType.SELF) {
-				System.out.println("Allowed submission types is self only");
-				return null;
+				throw new RedditException("Allowed submission types is self only");
 			}
-		} catch (Exception e) {
+		} catch (NetworkException e) {
 			e.printStackTrace();
 			return null;
+		} catch (IllegalArgumentException e) {
+			throw new RedditException(e.getMessage(), e);
 		}
 		if (client.getSubreddit(subreddit).isNsfw() && !Nsfw.getInstance().isChatAllowNsfw(chatId)) {
-			System.out.println("NSFW mode is off");
-			return null;
+			throw new RedditException("NSFW mode is off");
 		}
 		
 		Submission s = null;

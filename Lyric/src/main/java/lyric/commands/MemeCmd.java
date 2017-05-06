@@ -6,6 +6,7 @@ import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.bots.commands.BotCommand;
 
 import lyric.reddit.RedditApi;
+import lyric.reddit.RedditException;
 import lyric.servers.ImageServer;
 import lyric.servers.TextServer;
 import lyric.utils.Pair;
@@ -18,7 +19,13 @@ public class MemeCmd extends BotCommand {
 
 	@Override
 	public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
-		Pair<String, String> urls = RedditApi.getInstance().getRandomImageFromSubreddit("memes", chat.getId());
+		Pair<String, String> urls = null;
+		try {
+			urls = RedditApi.getInstance().getRandomImageFromSubreddit("memes", chat.getId());
+		} catch (RedditException e) {
+			TextServer.sendString(e.getMessage(), chat.getId());
+			return;
+		}
 		if (urls == null) 
 			TextServer.sendString("Could not find an image to display", chat.getId());
 		else
