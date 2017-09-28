@@ -32,7 +32,7 @@ public class MemeCmd extends BotCommand {
 			try {
 				ImageServer.sendImageFromUrl(urls, chat.getId());
 			} catch (Exception e) {
-				TextServer.sendString("Error displaying image", chat.getId());
+				TextServer.sendString("Error displaying image, but Kona still loves you <3", chat.getId());
 			}
 	}
 	
