@@ -11,6 +11,8 @@ import lyric.servers.ImageServer;
 import lyric.servers.TextServer;
 import lyric.utils.Pair;
 
+import Math;
+
 public class MemeCmd extends BotCommand {
 
 	public MemeCmd(String commandIdentifier, String description) {
@@ -20,6 +22,12 @@ public class MemeCmd extends BotCommand {
 	@Override
 	public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
 		Pair<String, String> urls = null;
+		int roll;
+		roll = Math.random() * 100;
+		String lmao = "";
+		if (roll == 69) {
+			lmao = "lmao";
+		}
 		try {
 			urls = RedditApi.getInstance().getRandomImageFromSubreddit("memes", chat.getId());
 		} catch (RedditException e) {
@@ -27,13 +35,14 @@ public class MemeCmd extends BotCommand {
 			return;
 		}
 		if (urls == null) 
-			TextServer.sendString("Could not find an image to display", chat.getId());
+			TextServer.sendString("Could not find an image to display" + lmao, chat.getId());
 		else
 			try {
 				ImageServer.sendImageFromUrl(urls, chat.getId());
 			} catch (Exception e) {
-				TextServer.sendString("Error displaying image", chat.getId());
+				TextServer.sendString("Error displaying image" + lmao, chat.getId());
 			}
+		lmao = "";
 	}
 	
 }
