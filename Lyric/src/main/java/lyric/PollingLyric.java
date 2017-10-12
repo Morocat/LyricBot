@@ -40,7 +40,6 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 	public final DiceCmd diceCmd = new DiceCmd("roll", "Rolls dice");
 	
 	public PollingLyric() {
-		//conversationStarter.start();
 		TextServer.initialize(this);
 		ImageServer.initialize(this);
 		
@@ -62,23 +61,6 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 		
 		System.out.println("Initialization done");
 	}
-	
-	/*private final Thread conversationStarter = new Thread(new Runnable() {
-
-		@Override
-		public void run() {
-			while (!Thread.interrupted()) {
-				if (chatId != 0)
-					sendString("Are you from Tennesse?\nCause you're the only ten I see!!", chatId);
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-					return;
-				}
-			}
-		}
-	});*/
 
 	@Override
 	public String getBotUsername() {

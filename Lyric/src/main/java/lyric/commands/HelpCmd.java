@@ -31,7 +31,7 @@ public class HelpCmd extends BotCommand {
 		s += "/poll - display the current poll\n";
 		s += "/poll results - show the current poll results\n";
 		s += "/roll [i]d[j] - rolls [i] amount of [j]-sided dice\n";
-		if (BotAdmin.getInstance().isUserAdmin(bot, chat.getId(), user.getId())) {
+		if (BotAdmin.getInstance().isUserAdmin(bot, chat.getId(), user.getId(), chat.isUserChat())) {
 			s += "/admin [userId] - adds [userId] to the list of bot admins for this chat\n";
 			s += "/nsfw [on/off] - Enables/Disables nsfw features\n";
 			s += "/poll start - start a new poll\n";

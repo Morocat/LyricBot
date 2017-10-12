@@ -3,7 +3,6 @@ package lyric.reddit;
 import java.util.Date;
 
 import lyric.admin.Nsfw;
-import lyric.utils.Pair;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.UserAgent;
@@ -36,12 +35,12 @@ public class RedditApi {
 	private final Credentials creds;
 	private final RedditClient client;
 	
-	public Pair<String, String> getRandomImageFromSubreddit(String subreddit, long chatId) throws RedditException {
+	public RedditReply getRandomImageFromSubreddit(String subreddit, long chatId) throws RedditException {
 		return getRandomImageFromSubreddit(subreddit, chatId, new String[0]);
 	}
 	
-	public Pair<String, String> getRandomImageFromSubreddit(String subreddit, long chatId, String... imageType) throws RedditException {
-		if (new Date().getTime() - expireTime.getTime() > 3600000L) {
+	public RedditReply getRandomImageFromSubreddit(String subreddit, long chatId, String... imageType) throws RedditException {
+		if (new Date().getTime() > expireTime.getTime()) {
 			try {
 				OAuthData authData = client.getOAuthHelper().easyAuth(creds);
 				client.authenticate(authData);
@@ -66,6 +65,7 @@ public class RedditApi {
 		}
 		
 		Submission s = null;
+		RedditReply rreply = null;
 		for (int i = 0; i < 10; i++) {
 			try {
 				s = client.getRandomSubmission(subreddit);
@@ -77,17 +77,26 @@ public class RedditApi {
 					break;
 				} else {
 					for (int j = 0; j < imageType.length; j++)
-						if (s.getUrl().endsWith(imageType[j]))
-							return new Pair<String, String>(s.getUrl(), s.getShortURL());
+						if (s.getUrl().endsWith(imageType[j])) {
+							rreply = new RedditReply();
+							rreply.urls.add(s.getUrl());
+							rreply.urls.add(s.getShortURL());
+							rreply.caption = s.getTitle();
+							return rreply;
+						}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				return null;
 			}
 		}
-		if (s == null)
+		if (s == null || s.isSelfPost())
 			return null;
-		return s.isSelfPost() ? null : new Pair<String, String>(s.getUrl(), s.getShortURL());
+		rreply = new RedditReply();
+		rreply.urls.add(s.getUrl());
+		rreply.urls.add(s.getShortURL());
+		rreply.caption = s.getTitle();
+		return rreply;
 	}
 	
 }

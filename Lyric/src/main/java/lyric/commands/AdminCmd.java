@@ -20,7 +20,7 @@ public class AdminCmd extends BotCommand {
 			TextServer.sendString("Invalid parameter", chat.getId());
 			return;
 		}
-		if (BotAdmin.getInstance().isUserAdmin(bot, chat.getId(), user.getId()))
+		if (BotAdmin.getInstance().isUserAdmin(bot, chat.getId(), user.getId(), chat.isUserChat()))
 			BotAdmin.getInstance().addAdmin(arguments[0], chat.getId());
 	}
 
