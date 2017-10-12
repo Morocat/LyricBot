@@ -17,11 +17,13 @@ public class NsfwCmd extends BotCommand {
 
 	@Override
 	public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
+		//System.out.println("Is user chat: " + chat.isUserChat());
+		//System.out.println("Is group chat: " + chat.isGroupChat());
 		if (arguments == null || arguments.length == 0) {
 			TextServer.sendString("NSFW mode is " + (Nsfw.getInstance().isChatAllowNsfw(chat.getId()) ? "on" : "off"), chat.getId());
 			return;
 		}
-		if (!BotAdmin.getInstance().isUserAdmin(absSender, chat.getId(), user.getId())) {
+		if (!BotAdmin.getInstance().isUserAdmin(absSender, chat.getId(), user.getId(), chat.isUserChat())) {
 			TextServer.sendString("Only bot admins may use that command", chat.getId());
 			return;
 		}

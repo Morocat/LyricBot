@@ -6,7 +6,7 @@ import org.telegram.telegrambots.api.methods.send.SendVideo;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
-import lyric.utils.Pair;
+import lyric.reddit.RedditReply;
 
 public class ImageServer {
 	
@@ -16,34 +16,37 @@ public class ImageServer {
 		ImageServer.bot = bot;
 	}
 
-	public static void sendImageFromUrl(Pair<String, String> urls, long chatId) throws TelegramApiException {
-		if (urls == null)
+	public static void sendImageFromUrl(RedditReply rreply, long chatId) throws TelegramApiException {
+		if (rreply == null)
 			return;
 
-		try {
-			System.out.println("Sending long url: " + urls.first);
-			sendImg(urls.first, chatId);
-		} catch (Exception e) {
-			e.printStackTrace();
-			// if long url doesn't work try the short one
-			System.out.println("Sending short url: " + urls.second);
-			sendImg(urls.second, chatId);
+		for (String url : rreply.urls) {
+			try {
+				System.out.println("Sending url: " + url);
+				sendImg(url, rreply.caption, chatId);
+				return; // only retry if unsuccessful
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
-	private static void sendImg(String url, long chatId) throws TelegramApiException {
+	private static void sendImg(String url, String caption, long chatId) throws TelegramApiException {
 		if (url.endsWith("gif")) {
 			SendDocument req = new SendDocument();
+			req.setCaption(caption);
 			req.setChatId(chatId);
 			req.setDocument(url);
 			bot.sendDocument(req);
 		} else if (url.endsWith("gifv") || url.endsWith("mp4")) {
 			SendVideo req = new SendVideo();
+			req.setCaption(caption);
 			req.setChatId(chatId);
 			req.setVideo(url);
 			bot.sendVideo(req);
 		} else {
 			SendPhoto req = new SendPhoto();
+			req.setCaption(caption);
 			req.setChatId(chatId);
 			req.setPhoto(url);
 			bot.sendPhoto(req);

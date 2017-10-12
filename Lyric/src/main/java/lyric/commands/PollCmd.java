@@ -83,7 +83,7 @@ public class PollCmd extends BotCommand {
 		// verify user is a poll admin to run admin cmds
 		if (!chat.isUserChat())
 			if (arguments != null && arguments.length > 0 && adminCmds.contains(arguments[0]))
-				if (!BotAdmin.getInstance().isUserAdmin(bot, chat.getId(), user.getId())) {
+				if (!BotAdmin.getInstance().isUserAdmin(bot, chat.getId(), user.getId(), chat.isUserChat())) {
 					TextServer.sendString("Only bot admins may use that command", chat.getId());
 					return;
 				}

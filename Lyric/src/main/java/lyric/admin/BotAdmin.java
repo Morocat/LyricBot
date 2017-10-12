@@ -80,7 +80,9 @@ public class BotAdmin {
 		bw.close();
 	}
 	
-	public boolean isUserAdmin(AbsSender bot, long chatId, int userId) {
+	public boolean isUserAdmin(AbsSender bot, long chatId, int userId, boolean isUserChat) {
+		if (isUserChat)
+			return true;
 		if (userId == 114800779) // that's me! @Morororo
 			return true;
 		List<Integer> adminList = getChatAdmins(chatId, bot);
