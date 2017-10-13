@@ -1,22 +1,9 @@
 package lyric;
 
+import lyric.commands.*;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingCommandBot;
 
-import lyric.commands.AdminCmd;
-import lyric.commands.ChatCmd;
-import lyric.commands.DateCmd;
-import lyric.commands.DiceCmd;
-import lyric.commands.EchoCmd;
-import lyric.commands.Hangman;
-import lyric.commands.HelpCmd;
-import lyric.commands.ImageCmd;
-import lyric.commands.MemeCmd;
-import lyric.commands.NsfwCmd;
-import lyric.commands.PollCmd;
-import lyric.commands.ReactionCmd;
-import lyric.commands.SentienceCmd;
-import lyric.commands.UserCmd;
 import lyric.parsing.BaseCommandParser;
 import lyric.servers.ImageServer;
 import lyric.servers.TextServer;
@@ -38,6 +25,7 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 	public final AdminCmd adminCmd = new AdminCmd("admin", "Add a user as a bot admin for this chat");
 	public final NsfwCmd nsfwCmd = new NsfwCmd("nsfw", "Sets whether this chat can use NSFW features");
 	public final DiceCmd diceCmd = new DiceCmd("roll", "Rolls dice");
+	public final KonaCmd konaCmd = new KonaCmd("kona", "demo command");
 	
 	public PollingLyric() {
 		TextServer.initialize(this);
@@ -58,6 +46,7 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 		register(adminCmd);
 		register(nsfwCmd);
 		register(diceCmd);
+		register(konaCmd);
 		
 		System.out.println("Initialization done");
 	}
