@@ -62,7 +62,7 @@ public class RanditCmd extends BotCommand {
 			}
 		guessesRemaining = 3;
 		gameState = STATE_PLAYING;
-		TextServer.sendString("You have " + guessesRemaining + " guesses remaining.", chat.getId());
+		TextServer.sendString("You have " + (guessesRemaining + 1) + " guesses remaining.", chat.getId());
 	}
 	
 	private void showUserScore(User user, long chatId) {
