@@ -23,10 +23,13 @@ public class HelpCmd extends BotCommand {
 		s += "/user - displays user info\n";
 		s += "/chat - displays chat info\n";
 		s += "/hangman - starts a game of hangman\n";
-		s += "\t\t/guess [letter] - guesses a letter\n";
-		s += "/meme - displays a random meme\n";
-		s += "/react - displays a random reaction gif\n";
-		s += "/image [subreddit] - displays a random image from [subreddit]\n";
+		s += "\t\t/letter [letter] - guesses a letter\n";
+		s += "/randit - starts a game of Randit";
+		s += "/randit score - brags about your randit score for all of chat to be jealous about";
+		s += "\t\t/guess - guesses a subreddit";
+		//s += "/meme - displays a random meme\n";
+		//s += "/react - displays a random reaction gif\n";
+		s += "/reddit [subreddit] - displays a random image from [subreddit]\n";
 		s += "/skynet - generates a random sentence\n";
 		s += "/poll - display the current poll\n";
 		s += "/poll results - show the current poll results\n";
@@ -39,9 +42,10 @@ public class HelpCmd extends BotCommand {
 			s += "/poll q [question] - set the poll's question\n";
 			s += "/poll add - add an option to the poll\n";
 			s += "/poll rm [char] - remove a poll option while building a poll\n";
-			TextServer.sendString(s, user.getId());
-		} else
-			TextServer.sendString(s, chat.getId());
+			//TextServer.sendString(s, user.getId());
+		} //else
+			//TextServer.sendString(s, chat.getId());
+		TextServer.sendString(s, user.getId());
 	}
 	
 	/**
@@ -54,13 +58,16 @@ date - Display the current time and date
 user - Displays user info
 chat - Displays chat info
 hangman - Start Hangman
-guess - Guess a letter in Hangman
-meme - Display a meme
-react - Display a reaction gif
-image - Display an image from [subreddit]
+letter - Guess a letter in Hangman
+reddit - Display an image from [subreddit]
 skynet - Generate a random sentence
 poll - Displays the current poll
 roll - Roll the dice
+randit - Starts Randit
+guess - guesses a subreddit
 	 */
+	
+	//meme - Display a meme
+	//react - Displays a reaction gif
 
 }

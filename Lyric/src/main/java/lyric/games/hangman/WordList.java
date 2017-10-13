@@ -9,7 +9,8 @@ public class WordList {
 		return words[rand.nextInt(words.length)];
 	}
 	
-	private final static String[] words = {"search",
+	private final static String[] words = {
+			"search",
 			"information",
 			"contact",
 			"business",

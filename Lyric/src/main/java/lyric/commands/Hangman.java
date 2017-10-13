@@ -21,8 +21,6 @@ public class Hangman extends BotCommand {
 	private List<Character> guesses = new ArrayList<>();
 	private int guessesRemaining; // number of incorrect guesses remaining
 	
-	public final GuessCmd guessCmd = new GuessCmd("guess", "Guesses a letter in hangman");
-	
 	public Hangman(String commandIdentifier, String description) {
 		super(commandIdentifier, description);
 	}
@@ -85,7 +83,7 @@ public class Hangman extends BotCommand {
 	
 	public class GuessCmd extends BotCommand {
 
-		private GuessCmd(String commandIdentifier, String description) {
+		public GuessCmd(String commandIdentifier, String description) {
 			super(commandIdentifier, description);
 		}
 

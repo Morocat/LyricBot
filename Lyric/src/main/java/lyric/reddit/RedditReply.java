@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class RedditReply {
 	public final ArrayList<String> urls = new ArrayList<>();
     public String caption;
+    public String subreddit;
 
     public RedditReply() {
     }
@@ -19,11 +20,12 @@ public class RedditReply {
         	return true;
         RedditReply t = (RedditReply) o;
         return urls.equals(t.urls)
-                && caption.equals(t.caption);
+                && caption.equals(t.caption)
+                && subreddit.equals(t.subreddit);
     }
 
     @Override
     public int hashCode() {
-        return (urls.hashCode()) ^ (caption.hashCode());
+        return (urls.hashCode()) ^ (caption.hashCode()) ^ (subreddit.hashCode());
     }
 }

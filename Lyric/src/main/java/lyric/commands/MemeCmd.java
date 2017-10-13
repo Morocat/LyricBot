@@ -22,15 +22,14 @@ public class MemeCmd extends BotCommand {
 
 	@Override
 	public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
-    RedditReply rreply = null;
-    String lmao = "";
+		RedditReply rreply = null;
+    	String lmao = "";
     
-		if (rand.nextInt(100) == 69) {
+		if (rand.nextInt(100) == 69)
 			lmao = "lmao";
-		}
 		
 		try {
-			rreply = RedditApi.getInstance().getRandomImageFromSubreddit("memes", chat.getId());
+			rreply = RedditApi.getInstance().getRandomImageFromSubreddit("memes", chat.getId(), new String[0]);
 		} catch (RedditException e) {
 			TextServer.sendString(e.getMessage() + lmao, chat.getId());
 			return;
