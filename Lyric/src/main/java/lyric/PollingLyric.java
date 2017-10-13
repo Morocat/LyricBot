@@ -28,6 +28,7 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 	public final DiceCmd diceCmd = new DiceCmd("roll", "Rolls dice");
 	public final RanditCmd randitCmd = new RanditCmd("randit", "Starts a game of Randit");
 	public final RanditCmd.GuessCmd randitGuessCmd = randitCmd.new GuessCmd("guess", "Guess a subreddit");
+	public final KonaCmd konaCmd = new KonaCmd("kona", "69");
 	
 	public PollingLyric() {
 		TextServer.initialize(this);
@@ -50,6 +51,7 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 		register(diceCmd);
 		register(randitCmd);
 		register(randitGuessCmd);
+		register(konaCmd);
 		
 		System.out.println("Initialization done");
 	}
