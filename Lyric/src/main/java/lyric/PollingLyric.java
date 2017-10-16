@@ -63,7 +63,7 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 	@Override
 	public String getBotUsername() {
 		if (PRODUCTION_RELEASE)
-			return "LyricBot";  // production
+			return "djparkourbot";  // production
 		return "LyricDevBot";   // development
 	}
 

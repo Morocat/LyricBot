@@ -47,6 +47,8 @@ public class HelpCmd extends BotCommand {
 		s += "/greeting\n";
 		s += "\t\t[custom string] - sets a custom string for your greeting\n";
 		s += "\t\t[time] [4 digit 24hr time HHMM] - sets the time each day to display the greeting\n";
+		s += "\t\tstop - stops your greeting service\n";
+		
 		if (BotAdmin.getInstance().isUserAdmin(bot, chat.getId(), user.getId(), chat.isUserChat())) {
 			s += "/admin [userId] - adds [userId] to the list of bot admins for this chat\n";
 			s += "/nsfw [on/off] - Enables/Disables nsfw features\n";

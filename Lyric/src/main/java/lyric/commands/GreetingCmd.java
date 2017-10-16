@@ -27,6 +27,8 @@ public class GreetingCmd extends BotCommand {
 	 *  		value->int
 	 *  		key  ->minute
 	 *  		value->int
+	 *  		key  ->active
+	 *  		value->boolean
 	 */
 	private JSONObject userGreetings;
 
@@ -48,6 +50,8 @@ public class GreetingCmd extends BotCommand {
 				return;
 			} else if (arguments[0].equals("default")){
 				greeting = DEFAULT_GREETING;
+			} else if (arguments[0].equals("stop")) {
+				stopGreeting(user.getId());
 			} else {
 				for (String s : arguments) {
 					greeting += s + " ";
@@ -60,6 +64,7 @@ public class GreetingCmd extends BotCommand {
 	private void setGreeting(int userId, String greeting) {
 		JSONObject o = getUserObject(userId);
 		o.put("greeting", greeting);
+		o.put("active", true);
 		userGreetings.put(String.valueOf(userId), o);
 		saveGreetings();
 		TextServer.sendString("Greeting has been set", userId);
@@ -73,11 +78,17 @@ public class GreetingCmd extends BotCommand {
 			JSONObject o = getUserObject(userId);
 			o.put("hour", hour);
 			o.put("minute", minute);
+			o.put("active", true);
 			saveGreetings();
-			TextServer.sendString("Greeting set for " + hour + ":" + minute + " each day.", userId);
+			TextServer.sendString("Greeting set for " + args[1] + " each day.", userId);
 		} else {
 			TextServer.sendString("Incorrect time format", userId);
 		}
+	}
+	
+	private void stopGreeting(int userId) {
+		JSONObject o = getUserObject(userId);
+		o.put("active", false);
 	}
 	
 	private JSONObject getUserObject(int userId) {
@@ -120,7 +131,9 @@ public class GreetingCmd extends BotCommand {
 					date = new Date();
 					for (String userId : userGreetings.keySet()) {
 						o = userGreetings.getJSONObject(userId);
-						if (!o.has("greeting") || !o.has("hour") || !o.has("minute"))
+						if (!o.has("greeting") || !o.has("hour") || !o.has("minute") || !o.has("active"))
+							continue;
+						if (!o.getBoolean("active"))
 							continue;
 						if (!latches.containsKey(userId))
 							latches.put(userId, false);
@@ -140,7 +153,7 @@ public class GreetingCmd extends BotCommand {
 					e.printStackTrace();
 				}
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(20000);
 				} catch (InterruptedException e) {
 					return;
 				}
