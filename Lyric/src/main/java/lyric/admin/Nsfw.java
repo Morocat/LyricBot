@@ -1,10 +1,5 @@
 package lyric.admin;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +7,8 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import lyric.servers.FileHost;
 
 public class Nsfw {
 	private final static Nsfw instance = new Nsfw();
@@ -22,7 +19,7 @@ public class Nsfw {
 		return instance;
 	}
 	
-	private final static String FILENAME = "NSFW.txt";
+	private final static String NSFW_FILE_PATH = "NSFW.txt";
 	
 	private HashMap<Long, Boolean> nsfwMap = new HashMap<>();
 	
@@ -43,13 +40,14 @@ public class Nsfw {
 	private JSONArray getNsfw() throws JSONException {
 		String json = "";
 		try {
-			FileReader fr = new FileReader(new File(FILENAME));
+			json = FileHost.readFile(NSFW_FILE_PATH);
+			/*FileReader fr = new FileReader(new File(NSFW_FILE_PATH));
 			BufferedReader br = new BufferedReader(fr);
 			String line;
 			while((line = br.readLine()) != null)
 				json += line;
-			br.close();
-		} catch (IOException e) {
+			br.close();*/
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -64,9 +62,10 @@ public class Nsfw {
 			o.put("value", en.getValue());
 			arr.put(o);
 		}
-		BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME));
+		FileHost.writeFile(NSFW_FILE_PATH, arr.toString());
+		/*BufferedWriter bw = new BufferedWriter(new FileWriter(NSFW_FILE_PATH));
 		bw.write(arr.toString());
-		bw.close();
+		bw.close();*/
 	}
 	
 	public boolean isChatAllowNsfw(long chatId) {

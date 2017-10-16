@@ -1,10 +1,5 @@
 package lyric.admin;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +14,8 @@ import org.telegram.telegrambots.api.objects.ChatMember;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import lyric.servers.FileHost;
+
 public class BotAdmin {
 	private final static BotAdmin instance = new BotAdmin();
 	private BotAdmin(){
@@ -28,7 +25,7 @@ public class BotAdmin {
 		return instance;
 	}
 	
-	private final static String FILENAME = "Bot Admins.txt";
+	private final static String BOT_ADMINS_FILE_PATH = "Bot Admins.txt";
 	
 	// <ChatId, UserIds>
 	private HashMap<Long, List<Integer>> admins = new HashMap<>();
@@ -54,13 +51,14 @@ public class BotAdmin {
 	private JSONArray getAdmins() throws JSONException {
 		String json = "";
 		try {
-			FileReader fr = new FileReader(new File(FILENAME));
+			json = FileHost.readFile(BOT_ADMINS_FILE_PATH);
+			/*FileReader fr = new FileReader(new File(FILENAME));
 			BufferedReader br = new BufferedReader(fr);
 			String line;
 			while((line = br.readLine()) != null)
 				json += line;
-			br.close();
-		} catch (IOException e) {
+			br.close();*/
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -75,9 +73,10 @@ public class BotAdmin {
 			o.put("value", en.getValue());
 			arr.put(o);
 		}
-		BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME));
+		FileHost.writeFile(BOT_ADMINS_FILE_PATH, arr.toString());
+		/*BufferedWriter bw = new BufferedWriter(new FileWriter(BOT_ADMINS_FILE_PATH));
 		bw.write(arr.toString());
-		bw.close();
+		bw.close();*/
 	}
 	
 	public boolean isUserAdmin(AbsSender bot, long chatId, int userId, boolean isUserChat) {

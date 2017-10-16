@@ -1,11 +1,5 @@
 package lyric.commands;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.telegram.telegrambots.api.objects.Chat;
@@ -16,6 +10,7 @@ import org.telegram.telegrambots.bots.commands.BotCommand;
 import lyric.reddit.RedditApi;
 import lyric.reddit.RedditException;
 import lyric.reddit.RedditReply;
+import lyric.servers.FileHost;
 import lyric.servers.ImageServer;
 import lyric.servers.TextServer;
 
@@ -117,12 +112,7 @@ public class RanditCmd extends BotCommand {
 	private void loadScores() throws JSONException {
 		String json = "";
 		try {
-			FileReader fr = new FileReader(new File(RANDIT_SCORES_PATH));
-			BufferedReader br = new BufferedReader(fr);
-			String line;
-			while((line = br.readLine()) != null)
-				json += line;
-			br.close();
+			json = FileHost.readFile(RANDIT_SCORES_PATH);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -133,9 +123,7 @@ public class RanditCmd extends BotCommand {
 	
 	public void saveScores() {
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(RANDIT_SCORES_PATH));
-			bw.write(userScores.toString());
-			bw.close();
+			FileHost.writeFile(RANDIT_SCORES_PATH, userScores.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

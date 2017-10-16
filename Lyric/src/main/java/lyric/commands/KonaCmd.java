@@ -15,7 +15,7 @@ public class KonaCmd extends BotCommand {
 
 	@Override
 	public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
-		TextServer.sendString("lmao", chat.getId());
+		TextServer.sendString("69 lmao", chat.getId());
 	}
 
 }

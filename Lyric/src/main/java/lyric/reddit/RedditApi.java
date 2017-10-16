@@ -2,7 +2,10 @@ package lyric.reddit;
 
 import java.util.Date;
 
+import org.json.JSONObject;
+
 import lyric.admin.Nsfw;
+import lyric.servers.FileHost;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.UserAgent;
@@ -13,15 +16,23 @@ import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.models.Subreddit.SubmissionType;
 
 public class RedditApi {
+	private final static String CREDENTIALS_FILE_PATH = "reddit_credentials.txt";
 	private final static RedditApi instance = new RedditApi();
-	//private final static byte[] userName = new byte[]{0x74, 0x69, 0x6d, 0x65, 0x5f, 0x63, 0x61, 0x74};
-	//private final static byte[] userCode = new byte[]{0x72, 0x6f, 0x63, 0x6b, 0x65, 0x74, 0x6d, 0x61, 0x6e};
-	// the above doesn't seem to work
+	private String userName, userPassword, clientId, clientSecret;
 	
 	private RedditApi() {
-		UserAgent agent = UserAgent.of("desktop", "LyricBot", "v0.1", "time_cat");
+		try {
+			JSONObject o = new JSONObject(FileHost.readFile(CREDENTIALS_FILE_PATH));
+			userName = o.getString("userName");
+			userPassword = o.getString("userPassword");
+			clientId = o.getString("clientId");
+			clientSecret = o.getString("clientSecret");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		UserAgent agent = UserAgent.of("desktop", "LyricBot", "v0.1", userName);
 		client = new RedditClient(agent);
-		creds = Credentials.script("time_cat", "rocketman", "0aLW0wi7S-Fz9Q", "-XyLm1yLuzuWUHGuxMQyp5OYtOc");
+		creds = Credentials.script(userName, userPassword, clientId, clientSecret);
 		try {
 			OAuthData authData = client.getOAuthHelper().easyAuth(creds);
 			client.authenticate(authData);

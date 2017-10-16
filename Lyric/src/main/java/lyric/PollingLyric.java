@@ -9,6 +9,8 @@ import lyric.servers.ImageServer;
 import lyric.servers.TextServer;
 
 public class PollingLyric extends TelegramLongPollingCommandBot {
+	private final static boolean PRODUCTION_RELEASE = true;
+	
 	private final BaseCommandParser parser = new BaseCommandParser(this);
 	
 	//public final MemeCmd memeCmd = new MemeCmd("meme", "Displays a random meme from r/memes");
@@ -29,6 +31,7 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 	public final RanditCmd randitCmd = new RanditCmd("randit", "Starts a game of Randit");
 	public final RanditCmd.GuessCmd randitGuessCmd = randitCmd.new GuessCmd("guess", "Guess a subreddit");
 	public final KonaCmd konaCmd = new KonaCmd("kona", "69");
+	public final GreetingCmd greetingCmd = new GreetingCmd("greeting", "Start your day the right way");
 	
 	public PollingLyric() {
 		TextServer.initialize(this);
@@ -52,19 +55,23 @@ public class PollingLyric extends TelegramLongPollingCommandBot {
 		register(randitCmd);
 		register(randitGuessCmd);
 		register(konaCmd);
+		register(greetingCmd);
 		
 		System.out.println("Initialization done");
 	}
 
 	@Override
 	public String getBotUsername() {
-		return "Lyric";
+		if (PRODUCTION_RELEASE)
+			return "LyricBot";  // production
+		return "LyricDevBot";   // development
 	}
 
 	@Override
 	public String getBotToken() {
-		return "351737494:AAE7ie6cqDgG-Jj28WwxXZvcmSFTqHlidyg"; // production @LyricBot
-		//return "333708864:AAEIiYkM9hzFWNk2rd05JiaqdlBgGF27NhQ"; // development @LyricBotDev
+		if (PRODUCTION_RELEASE)
+			return "351737494:AAE7ie6cqDgG-Jj28WwxXZvcmSFTqHlidyg"; // production @LyricBot
+		return "333708864:AAEIiYkM9hzFWNk2rd05JiaqdlBgGF27NhQ";     // development @LyricBotDev
 	}
 
 	@Override
